@@ -9,6 +9,7 @@ Se Home Assistant ti dice che il repository non è valido, ecco le soluzioni:
 ## ✅ **SOLUZIONI IMMEDIATE**
 
 ### **1. Verifica URL Corretto**
+
 ```
 ✅ CORRETTO: https://github.com/llingua/addon-grocy
 ❌ SBAGLIATO: https://github.com/llingua/addon-grocy.git
@@ -16,10 +17,12 @@ Se Home Assistant ti dice che il repository non è valido, ecco le soluzioni:
 ```
 
 ### **2. Attendi Propagazione GitHub**
+
 - GitHub può impiegare 5-10 minuti per propagare i file
 - Riprova dopo alcuni minuti
 
 ### **3. Riavvia Home Assistant**
+
 ```bash
 # Via SSH
 ha core restart
@@ -33,6 +36,7 @@ ha host reboot
 ## 🔍 **VERIFICA STRUTTURA REPOSITORY**
 
 ### **File Richiesti**
+
 ```
 addon-grocy/
 ├── repository.json          # ✅ Aggiunto
@@ -44,6 +48,7 @@ addon-grocy/
 ```
 
 ### **Test Accessibilità**
+
 ```bash
 # Test repository.json
 curl https://raw.githubusercontent.com/llingua/addon-grocy/main/repository.json
@@ -57,6 +62,7 @@ curl https://raw.githubusercontent.com/llingua/addon-grocy/main/grocy/config.yam
 ## 🛠️ **METODI ALTERNATIVI**
 
 ### **Metodo 1: Via SSH**
+
 ```bash
 # Aggiungi repository via SSH
 ha addons repository add https://github.com/llingua/addon-grocy
@@ -66,14 +72,16 @@ ha addons repository list
 ```
 
 ### **Metodo 2: Via configuration.yaml**
+
 ```yaml
 # Aggiungi a configuration.yaml
 addons:
-  - name: "Grocy Secure"
-    url: "https://github.com/llingua/addon-grocy"
+  - name: 'Grocy Secure'
+    url: 'https://github.com/llingua/addon-grocy'
 ```
 
 ### **Metodo 3: Download Manuale**
+
 1. Scarica il repository
 2. Copia in `/config/addons/`
 3. Riavvia Home Assistant
@@ -83,11 +91,13 @@ addons:
 ## 🔧 **CORREZIONI APPLICATE**
 
 ### **✅ Problemi Risolti**
+
 1. **URL corretto** in `config.yaml`
 2. **repository.json** aggiunto
 3. **Struttura conforme** ai requisiti HA
 
 ### **📋 Checklist Verifica**
+
 - [ ] URL repository corretto
 - [ ] File `repository.json` presente
 - [ ] File `grocy/config.yaml` accessibile
@@ -99,6 +109,7 @@ addons:
 ## 🆘 **SE IL PROBLEMA PERSISTE**
 
 ### **1. Controlla Log Home Assistant**
+
 ```bash
 # Log supervisor
 ha supervisor logs
@@ -108,6 +119,7 @@ ha core logs
 ```
 
 ### **2. Test Connessione**
+
 ```bash
 # Test ping GitHub
 ping github.com
@@ -117,11 +129,13 @@ nslookup github.com
 ```
 
 ### **3. Cache Browser**
+
 - Pulisci cache browser
 - Riavvia browser
 - Prova browser diverso
 
 ### **4. Firewall/Proxy**
+
 - Verifica firewall
 - Controlla proxy
 - Testa connessione diretta
@@ -131,10 +145,12 @@ nslookup github.com
 ## 📞 **SUPPORTO AGGIUNTIVO**
 
 ### **Community Home Assistant**
+
 - [Forum HA](https://community.home-assistant.io/)
 - [Discord HA](https://discord.gg/c5DvZ4e)
 
 ### **Documentazione Ufficiale**
+
 - [HA Add-ons](https://www.home-assistant.io/addons/)
 - [HA Repository](https://www.home-assistant.io/hassio/installing_third_party_addons/)
 
@@ -143,11 +159,13 @@ nslookup github.com
 ## 🎯 **STATO ATTUALE**
 
 ### **✅ Repository Configurato**
+
 - URL: `https://github.com/llingua/addon-grocy`
 - Struttura: Conforme HA
 - File: Tutti presenti
 
 ### **🔄 Prossimi Passi**
+
 1. Attendi propagazione GitHub (5-10 min)
 2. Riavvia Home Assistant
 3. Riprova ad aggiungere repository
@@ -157,4 +175,4 @@ nslookup github.com
 
 **Il repository è ora configurato correttamente per Home Assistant!** 🎉
 
-*Ultimo aggiornamento: 2025-09-26*
+_Ultimo aggiornamento: 2025-09-26_
