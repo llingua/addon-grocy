@@ -26,6 +26,17 @@ server {
         limit_req zone=login burst=5 nodelay;
         limit_req zone=api burst=10 nodelay;
     }
+    
+    # SICUREZZA: Gestione API per Direct - tutte le API vanno a PHP
+    location ~ ^/api/ {
+        limit_req zone=api burst=10 nodelay;
+        fastcgi_pass 127.0.0.1:9001;
+        fastcgi_read_timeout 300;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+        include /etc/nginx/includes/fastcgi_params.conf;
+    }
 
     location ~ .php$ {
         fastcgi_pass 127.0.0.1:9001;

@@ -19,16 +19,22 @@ server {
         limit_req zone=api burst=10 nodelay;
     }
 
-    # SICUREZZA: Gestione API per Ingress
+    # SICUREZZA: Gestione API per Ingress - tutte le API vanno a PHP
     location ~ ^/api/ {
         limit_req zone=api burst=10 nodelay;
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-    
-    # SICUREZZA: Gestione specifica per API Grocy
-    location ~ ^/api/(stock|system|user)/ {
-        limit_req zone=api burst=10 nodelay;
-        try_files $uri $uri/ /index.php?$query_string;
+        fastcgi_pass 127.0.0.1:9002;
+        fastcgi_read_timeout 300;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_index index.php;
+        
+        {{ if .grocy_user }}
+        fastcgi_param GROCY_AUTH_CLASS "Grocy\Middleware\ReverseProxyAuthMiddleware";
+        fastcgi_param GROCY_REVERSE_PROXY_AUTH_HEADER REMOTE_USER;
+        fastcgi_param HTTP_REMOTE_USER {{ .grocy_user }};
+        {{ end }}
+        
+        fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+        include /etc/nginx/includes/fastcgi_params.conf;
     }
 
     location ~ .php$ {
