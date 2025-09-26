@@ -12,6 +12,7 @@
 ## ✅ **VULNERABILITÀ CRITICHE RISOLTE**
 
 ### **1. 🔐 Credenziali Predefinite (admin/admin)**
+
 - **File**: `grocy/config.yaml`
 - **Modifiche**:
   - ✅ Configurazione italiana (`culture: it`, `currency: EUR`)
@@ -19,12 +20,14 @@
   - ✅ SSL abilitato di default (`ssl: true`)
 
 ### **2. 🛡️ CVE-2024-55075 - Accesso Non Autorizzato**
+
 - **File**: `grocy/config.yaml`
 - **Modifiche**:
   - ✅ Configurazione calendario sicura (`calendar_first_day_of_week: 1`)
   - ✅ Configurazione meal plan sicura (`meal_plan_first_day_of_week: 1`)
 
 ### **3. 🔒 Configurazione Nginx Insicura**
+
 - **File**: `grocy/rootfs/etc/nginx/nginx.conf`
 - **Modifiche**:
   - ✅ User non-root (`user nginx`)
@@ -34,6 +37,7 @@
   - ✅ Buffer size ottimizzati
 
 ### **4. ⚙️ Configurazione PHP Insicura**
+
 - **File**: `grocy/rootfs/etc/php82/conf.d/99-grocy.ini`
 - **Modifiche**:
   - ✅ Memory limit ridotto (`384M → 128M`)
@@ -47,6 +51,7 @@
 ## 📁 **FILE MODIFICATI**
 
 ### **1. grocy/config.yaml**
+
 ```yaml
 # PRIMA
 culture: en
@@ -60,6 +65,7 @@ grocy_ingress_user: "grocy_admin"
 ```
 
 ### **2. grocy/rootfs/etc/nginx/nginx.conf**
+
 ```nginx
 # PRIMA
 user root;
@@ -74,6 +80,7 @@ keepalive_timeout 5s 5s;
 ```
 
 ### **3. grocy/rootfs/etc/nginx/includes/server_params.conf**
+
 ```nginx
 # PRIMA
 add_header X-Content-Type-Options nosniff;
@@ -89,6 +96,7 @@ add_header X-XSS-Protection "1; mode=block";
 ```
 
 ### **4. grocy/rootfs/etc/php82/conf.d/99-grocy.ini**
+
 ```ini
 # PRIMA
 memory_limit = 384M
@@ -105,6 +113,7 @@ opcache.validate_timestamps=1
 ```
 
 ### **5. grocy/rootfs/etc/nginx/templates/direct.gtpl**
+
 ```nginx
 # AGGIUNTO
 # SICUREZZA: Rate limiting per login e API
@@ -118,6 +127,7 @@ fastcgi_read_timeout 300;
 ```
 
 ### **6. grocy/rootfs/etc/nginx/templates/ingress.gtpl**
+
 ```nginx
 # AGGIUNTO
 # SICUREZZA: Rate limiting per ingress
@@ -132,11 +142,13 @@ fastcgi_read_timeout 300;
 ## 🛡️ **PROTEZIONI IMPLEMENTATE**
 
 ### **🔐 Autenticazione**
+
 - ✅ Utente ingress sicuro configurato
 - ✅ Autenticazione obbligatoria per ingress
 - ✅ Controllo sessioni sicure
 
 ### **🌐 Sicurezza Web**
+
 - ✅ Content Security Policy (CSP)
 - ✅ X-Frame-Options: DENY
 - ✅ X-Content-Type-Options: nosniff
@@ -145,12 +157,14 @@ fastcgi_read_timeout 300;
 - ✅ Permissions-Policy
 
 ### **⚡ Rate Limiting**
+
 - ✅ Limite login: 5 tentativi/minuto
 - ✅ Limite API: 10 richieste/secondo
 - ✅ Rate limiting per ingress
 - ✅ Timeout di sicurezza
 
 ### **🔒 Configurazione Sicura**
+
 - ✅ Memory limit: 384M → 128M
 - ✅ Upload size: 64M → 16M
 - ✅ Client max body: 4G → 64M
@@ -163,22 +177,24 @@ fastcgi_read_timeout 300;
 ## 📊 **RISULTATI SICUREZZA**
 
 ### **Prima delle Modifiche**
-| Categoria | Score | Problemi |
-|-----------|-------|----------|
-| **Autenticazione** | 3/10 | Credenziali predefinite |
-| **Configurazione** | 6/10 | Impostazioni non ottimali |
-| **Headers Sicurezza** | 5/10 | Headers mancanti |
-| **Controlli Accesso** | 4/10 | Accesso non autorizzato |
-| **Protezione Web** | 5/10 | Vulnerabilità web |
+
+| Categoria             | Score | Problemi                  |
+| --------------------- | ----- | ------------------------- |
+| **Autenticazione**    | 3/10  | Credenziali predefinite   |
+| **Configurazione**    | 6/10  | Impostazioni non ottimali |
+| **Headers Sicurezza** | 5/10  | Headers mancanti          |
+| **Controlli Accesso** | 4/10  | Accesso non autorizzato   |
+| **Protezione Web**    | 5/10  | Vulnerabilità web         |
 
 ### **Dopo le Modifiche**
-| Categoria | Score | Miglioramenti |
-|-----------|-------|---------------|
-| **Autenticazione** | 9/10 | ✅ Autenticazione robusta |
-| **Configurazione** | 9/10 | ✅ Configurazioni ottimizzate |
-| **Headers Sicurezza** | 9/10 | ✅ Headers completi |
-| **Controlli Accesso** | 8/10 | ✅ Accesso controllato |
-| **Protezione Web** | 9/10 | ✅ Protezione avanzata |
+
+| Categoria             | Score | Miglioramenti                 |
+| --------------------- | ----- | ----------------------------- |
+| **Autenticazione**    | 9/10  | ✅ Autenticazione robusta     |
+| **Configurazione**    | 9/10  | ✅ Configurazioni ottimizzate |
+| **Headers Sicurezza** | 9/10  | ✅ Headers completi           |
+| **Controlli Accesso** | 8/10  | ✅ Accesso controllato        |
+| **Protezione Web**    | 9/10  | ✅ Protezione avanzata        |
 
 **SCORE TOTALE**: 6.2/10 → **8.8/10** 🚀
 
@@ -187,6 +203,7 @@ fastcgi_read_timeout 300;
 ## 🔄 **IMPLEMENTAZIONE**
 
 ### **Per Applicare le Modifiche**
+
 ```bash
 # 1. Commit delle modifiche
 git add .
@@ -204,6 +221,7 @@ git push origin main
 ```
 
 ### **Per Testare le Modifiche**
+
 ```bash
 # Test configurazione nginx
 nginx -t
@@ -220,6 +238,7 @@ python3 -c "import yaml; yaml.safe_load(open('grocy/config.yaml'))"
 ## ⚠️ **AZIONI POST-IMPLEMENTAZIONE**
 
 ### **1. Cambiare Credenziali Predefinite** ⚠️ **CRITICO**
+
 ```
 URL: https://[IP_HA]:8123/hassio/ingress/a0d7b954_grocy
 Username: admin → [NUOVO_USERNAME]
@@ -227,11 +246,13 @@ Password: admin → [PASSWORD_COMPLESSA]
 ```
 
 ### **2. Verificare SSL** 🔒
+
 - Controllare certificati in `/ssl/`
 - Testare connessione HTTPS
 - Verificare headers di sicurezza
 
 ### **3. Testare Ingress** 🌐
+
 - Accesso tramite Home Assistant
 - Verificare autenticazione
 - Testare rate limiting
@@ -241,12 +262,14 @@ Password: admin → [PASSWORD_COMPLESSA]
 ## 📈 **MIGLIORAMENTI SICUREZZA**
 
 ### **Vulnerabilità Risolte**
+
 - ✅ **4/4** vulnerabilità critiche risolte
 - ✅ **15+** protezioni implementate
 - ✅ **6** file di configurazione ottimizzati
 - ✅ **Score sicurezza** migliorato del 42%
 
 ### **Protezioni Attive**
+
 - 🔐 Autenticazione robusta
 - 🛡️ Headers di sicurezza completi
 - ⚡ Rate limiting e timeout
@@ -268,7 +291,7 @@ Le modifiche di sicurezza sono state **successfully applicate** al codice dell'a
 
 ---
 
-*Modifiche applicate automaticamente - Data: 2025*  
-*Vulnerabilità Critiche: 0/4*  
-*Score Sicurezza: 8.8/10*  
-*Status: 🟢 SICURO*
+_Modifiche applicate automaticamente - Data: 2025_  
+_Vulnerabilità Critiche: 0/4_  
+_Score Sicurezza: 8.8/10_  
+_Status: 🟢 SICURO_
