@@ -35,6 +35,8 @@ server {
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+        fastcgi_param REQUEST_URI $request_uri;
+        fastcgi_param QUERY_STRING $query_string;
         include /etc/nginx/includes/fastcgi_params.conf;
     }
 
