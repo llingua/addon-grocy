@@ -19,6 +19,18 @@ server {
         limit_req zone=api burst=10 nodelay;
     }
 
+    # SICUREZZA: Gestione API per Ingress
+    location ~ ^/api/ {
+        limit_req zone=api burst=10 nodelay;
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+    
+    # SICUREZZA: Gestione specifica per API Grocy
+    location ~ ^/api/(stock|system|user)/ {
+        limit_req zone=api burst=10 nodelay;
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
     location ~ .php$ {
         fastcgi_pass 127.0.0.1:9002;
         # SICUREZZA: Ridurre timeout da 900 a 300 secondi
