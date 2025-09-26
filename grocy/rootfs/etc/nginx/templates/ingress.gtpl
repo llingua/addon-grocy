@@ -3,16 +3,22 @@ server {
 
     include /etc/nginx/includes/server_params.conf;
 
+    # SICUREZZA: Accesso limitato a Home Assistant
     allow   172.30.32.2;
     deny    all;
+    
+    # SICUREZZA: Rate limiting per ingress
+    limit_req zone=api burst=10 nodelay;
 
     location ~ .php$ {
         fastcgi_pass 127.0.0.1:9002;
-        fastcgi_read_timeout 900;
+        # SICUREZZA: Ridurre timeout da 900 a 300 secondi
+        fastcgi_read_timeout 300;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_index index.php;
 
         {{ if .grocy_user }}
+        # SICUREZZA: Autenticazione sicura per ingress
         fastcgi_param GROCY_AUTH_CLASS "Grocy\Middleware\ReverseProxyAuthMiddleware";
         fastcgi_param GROCY_REVERSE_PROXY_AUTH_HEADER REMOTE_USER;
         fastcgi_param HTTP_REMOTE_USER {{ .grocy_user }};

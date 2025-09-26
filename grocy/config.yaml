@@ -21,8 +21,8 @@ ports:
 ports_description:
   80/tcp: Web interface (Not required for Ingress)
 options:
-  culture: en
-  currency: USD
+  culture: it
+  currency: EUR
   entry_page: stock
   features:
     batteries: true
@@ -34,7 +34,9 @@ options:
     stock: true
     tasks: true
   tweaks:
+    calendar_first_day_of_week: 1
     chores_assignment: true
+    meal_plan_first_day_of_week: 1
     multiple_shopping_lists: true
     stock_best_before_date_tracking: true
     stock_location_tracking: true
@@ -45,7 +47,7 @@ options:
   ssl: true
   certfile: fullchain.pem
   keyfile: privkey.pem
-  grocy_ingress_user: ""
+  grocy_ingress_user: 'grocy_admin'
 schema:
   log_level: list(trace|debug|info|notice|warning|error|fatal)?
   culture: list(ca|cs|da|de|el_GR|en|en_GB|es|et|fi|fr|he_IL|hu|it|ja|ko_KR|lt|nl|no|pl|pt_BR|pt_PT|ro|ru|sk_SK|sl|sv_SE|ta|tr|uk|zh_CN|zh_TW)
