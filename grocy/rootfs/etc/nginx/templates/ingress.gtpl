@@ -1,7 +1,7 @@
 server {
     listen {{ .interface }}:8099 default_server;
 
-    include /etc/nginx/includes/server_params.conf;
+    include /etc/nginx/includes/server_params_ingress.conf;
 
     # SICUREZZA: Accesso limitato a Home Assistant
     allow   172.30.32.2;
