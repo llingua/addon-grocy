@@ -14,6 +14,13 @@ server {
     ssl_certificate_key /ssl/{{ .keyfile }};
     {{ end }}
 
+    # SICUREZZA: Rate limiting per file statici (più permissivo)
+    location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        limit_req zone=static burst=20 nodelay;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+    
     # SICUREZZA: Rate limiting per login e API
     location ~ ^/(login|api) {
         limit_req zone=login burst=5 nodelay;

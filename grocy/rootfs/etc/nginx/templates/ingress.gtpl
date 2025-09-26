@@ -7,8 +7,17 @@ server {
     allow   172.30.32.2;
     deny    all;
     
-    # SICUREZZA: Rate limiting per ingress
-    limit_req zone=api burst=10 nodelay;
+    # SICUREZZA: Rate limiting per ingress (più permissivo per file statici)
+    location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        limit_req zone=static burst=20 nodelay;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+    
+    location ~ ^/(login|api) {
+        limit_req zone=login burst=5 nodelay;
+        limit_req zone=api burst=10 nodelay;
+    }
 
     location ~ .php$ {
         fastcgi_pass 127.0.0.1:9002;
