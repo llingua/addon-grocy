@@ -62,11 +62,11 @@ Password: admin → [PASSWORD_COMPLESSA]
 
 ```yaml
 # Configurazione completa sicura
-culture: it                    # Lingua italiana
-currency: EUR                 # Valuta Euro
-entry_page: stock            # Pagina iniziale sicura
-ssl: true                    # SSL obbligatorio
-grocy_ingress_user: 'grocy_admin'  # Utente ingress sicuro
+culture: it # Lingua italiana
+currency: EUR # Valuta Euro
+entry_page: stock # Pagina iniziale sicura
+ssl: true # SSL obbligatorio
+grocy_ingress_user: 'grocy_admin' # Utente ingress sicuro
 
 # Funzionalità abilitate
 features:
@@ -81,8 +81,8 @@ features:
 
 # Configurazioni di sicurezza
 tweaks:
-  calendar_first_day_of_week: 1        # Lunedì come primo giorno
-  meal_plan_first_day_of_week: 1        # Lunedì come primo giorno
+  calendar_first_day_of_week: 1 # Lunedì come primo giorno
+  meal_plan_first_day_of_week: 1 # Lunedì come primo giorno
   chores_assignment: true
   multiple_shopping_lists: true
   stock_best_before_date_tracking: true
@@ -98,11 +98,13 @@ tweaks:
 ## 🛡️ **PROTEZIONI IMPLEMENTATE**
 
 ### **🔐 Autenticazione**
+
 - Utente ingress sicuro configurato
 - Autenticazione obbligatoria per ingress
 - Controllo sessioni sicure
 
 ### **🌐 Sicurezza Web**
+
 - **Content Security Policy (CSP)** - Previene XSS
 - **X-Frame-Options: DENY** - Previene clickjacking
 - **Strict-Transport-Security (HSTS)** - Forza HTTPS
@@ -111,12 +113,14 @@ tweaks:
 - **Permissions-Policy** - Controllo permessi browser
 
 ### **⚡ Rate Limiting**
+
 - **Limite login**: 5 tentativi/minuto
 - **Limite API**: 10 richieste/secondo
 - **Rate limiting per ingress**
 - **Timeout di sicurezza** per prevenire attacchi slowloris
 
 ### **🔒 Configurazione Sicura**
+
 - **Memory limit**: 384M → 128M
 - **Upload size**: 64M → 16M
 - **Client max body**: 4G → 64M
@@ -141,10 +145,12 @@ tweaks:
 ### **Test di Sicurezza**
 
 1. **Test Accesso Non Autorizzato**:
+
    - Prova ad accedere senza autenticazione
    - Dovrebbe essere bloccato
 
 2. **Test Headers di Sicurezza**:
+
    - Controlla headers nelle DevTools del browser
    - Dovrebbero essere presenti CSP, HSTS, etc.
 
@@ -157,25 +163,33 @@ tweaks:
 ## 🆘 **TROUBLESHOOTING**
 
 ### **Problema: Repository non trovato**
+
 **Soluzione**:
+
 - Verifica URL: `https://github.com/llingua/addon-grocy`
 - Riavvia Home Assistant
 - Controlla connessione internet
 
 ### **Problema: Add-on non visibile**
+
 **Soluzione**:
+
 - Riavvia Home Assistant
 - Pulisci cache browser
 - Controlla log supervisor
 
 ### **Problema: Errore di configurazione**
+
 **Soluzione**:
+
 - Verifica sintassi YAML
 - Controlla log dell'add-on
 - Riavvia l'add-on
 
 ### **Problema: Accesso negato**
+
 **Soluzione**:
+
 - Verifica credenziali
 - Controlla configurazione ingress
 - Testa accesso tramite Home Assistant
@@ -185,6 +199,7 @@ tweaks:
 ## 📊 **MONITORAGGIO SICUREZZA**
 
 ### **Log da Monitorare**
+
 ```bash
 # Log nginx
 tail -f /var/log/nginx/access.log
@@ -198,6 +213,7 @@ hassio addon logs grocy
 ```
 
 ### **Metriche di Sicurezza**
+
 - Tentativi di login falliti
 - Rate limiting attivato
 - Accessi non autorizzati
@@ -208,11 +224,13 @@ hassio addon logs grocy
 ## 🔄 **MANUTENZIONE**
 
 ### **Aggiornamenti**
+
 - Monitora aggiornamenti di sicurezza
 - Backup configurazioni prima di aggiornare
 - Testa in ambiente di sviluppo
 
 ### **Backup**
+
 - Backup regolare del database Grocy
 - Backup configurazioni add-on
 - Backup certificati SSL
@@ -222,12 +240,14 @@ hassio addon logs grocy
 ## 📞 **SUPPORTO**
 
 ### **In Caso di Problemi**
+
 1. Controlla i log di Home Assistant
 2. Verifica la configurazione
 3. Consulta la documentazione
 4. Contatta il supporto della community
 
 ### **Risorse Utili**
+
 - [Home Assistant Community](https://community.home-assistant.io/)
 - [Grocy Documentation](https://grocy.info/)
 - [Security Best Practices](https://owasp.org/)
@@ -239,6 +259,7 @@ hassio addon logs grocy
 Hai installato con successo l'add-on Grocy sicuro! 🛡️
 
 **Il tuo sistema è ora protetto con:**
+
 - Score sicurezza: 8.8/10
 - Vulnerabilità critiche: 0/4
 - Protezioni attive: 15+
@@ -247,6 +268,6 @@ Hai installato con successo l'add-on Grocy sicuro! 🛡️
 
 ---
 
-*Istruzioni generate automaticamente - Data: 2025*  
-*Add-on Grocy Sicuro v1.0*  
-*Score Sicurezza: 8.8/10*
+_Istruzioni generate automaticamente - Data: 2025_  
+_Add-on Grocy Sicuro v1.0_  
+_Score Sicurezza: 8.8/10_
