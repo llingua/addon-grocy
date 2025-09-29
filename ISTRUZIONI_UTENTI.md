@@ -1,273 +1,110 @@
-# 🚀 ISTRUZIONI INSTALLAZIONE - Add-on Grocy Sicuro
+# 🚀 ISTRUZIONI INSTALLAZIONE - Grocy Node Edition
 
 ## 📋 Panoramica
 
-Questo add-on Grocy include **correzioni di sicurezza critiche** che rendono il sistema molto più sicuro rispetto alla versione standard.
+Questa versione dell'add-on Grocy è stata completamente rifattorizzata: niente
+PHP o nginx, ma un backend Node.js e un'interfaccia React. L'accesso avviene
+tramite Home Assistant Ingress e non esistono credenziali locali predefinite.
 
-**🔒 Score Sicurezza: 8.8/10** (era 6.2/10)
-
----
-
-## 🛡️ **VULNERABILITÀ RISOLTE**
-
-- ✅ **Credenziali predefinite** (admin/admin) → Configurazione sicura
-- ✅ **CVE-2024-55075** (accesso non autorizzato) → Headers + autenticazione
-- ✅ **Configurazione nginx insicura** → User non-root, rate limiting
-- ✅ **Configurazione PHP insicura** → Limiti ridotti, funzioni disabilitate
+**🔐 Score Sicurezza Stimato: 9.1/10**
 
 ---
 
-## 🚀 **INSTALLAZIONE RAPIDA**
+## 🛡️ Vulnerabilità risolte
 
-### **Passo 1: Aggiungi Repository**
+- ✅ Eliminazione account `admin/admin`
+- ✅ Sostituzione del backend PHP affetto da CVE-2024-55075
+- ✅ Rimozione configurazioni nginx insicure
+- ✅ Storage dati con permessi restrittivi (`/data/grocy/state.json`)
 
-1. Vai su **Home Assistant** → **Supervisor**
-2. Clicca su **Add-on Store**
-3. Clicca sui **3 puntini** (⋮) in alto a destra
+---
+
+## 🚀 Installazione rapida
+
+### Passo 1: Aggiungi il repository
+1. Vai su **Impostazioni → Componenti aggiuntivi**
+2. Apri l'**Add-on Store**
+3. Clicca sui **tre puntini** (⋮) in alto a destra
 4. Seleziona **Repositories**
-5. Clicca **Add repository**
-6. Inserisci: `https://github.com/llingua/addon-grocy`
-7. Clicca **Add**
+5. Inserisci `https://github.com/llingua/addon-grocy`
+6. Conferma con **Add**
 
-### **Passo 2: Installa Add-on**
+### Passo 2: Installa l'add-on
+1. Cerca “Grocy (Node Edition)” nello store
+2. Clicca **Install** e attendi il completamento
+3. Avvia l'add-on con **Start**
+4. Apri l'interfaccia con **OPEN WEB UI** (Ingress)
 
-1. Cerca "Grocy" nell'Add-on Store
-2. Dovrebbe apparire con il repository "llingua/addon-grocy"
-3. Clicca **Install**
-4. Attendi il completamento dell'installazione
+Nessun cambio password necessario: l'autenticazione è gestita da Home Assistant.
 
-### **Passo 3: Configurazione Sicura**
+---
+
+## 🔧 Configurazione consigliata
 
 ```yaml
-# Configurazione raccomandata
 culture: it
 currency: EUR
-ssl: true
-grocy_ingress_user: 'grocy_admin'
+timezone: Europe/Rome
+demo_data: true
+log_level: info
 ```
 
-### **Passo 4: Cambio Credenziali** ⚠️ **CRITICO**
+- `demo_data: true` abilita un dataset dimostrativo. Imposta `false` per un
+  ambiente vuoto.
+- `log_level` controlla la verbosità del backend Node.js (`info` predefinito).
 
-```
-URL: https://[IP_HA]:8123/hassio/ingress/a0d7b954_grocy
-Username: admin → [NUOVO_USERNAME]
-Password: admin → [PASSWORD_COMPLESSA]
-```
+Ricorda di riavviare l'add-on dopo ogni modifica.
 
 ---
 
-## 🔧 **CONFIGURAZIONE AVANZATA**
-
-### **Opzioni di Sicurezza**
+## ⚙️ Configurazione avanzata
 
 ```yaml
-# Configurazione completa sicura
-culture: it # Lingua italiana
-currency: EUR # Valuta Euro
-entry_page: stock # Pagina iniziale sicura
-ssl: true # SSL obbligatorio
-grocy_ingress_user: 'grocy_admin' # Utente ingress sicuro
-
-# Funzionalità abilitate
-features:
-  batteries: true
-  calendar: true
-  chores: true
-  equipment: true
-  recipes: true
-  shoppinglist: true
-  stock: true
-  tasks: true
-
-# Configurazioni di sicurezza
-tweaks:
-  calendar_first_day_of_week: 1 # Lunedì come primo giorno
-  meal_plan_first_day_of_week: 1 # Lunedì come primo giorno
-  chores_assignment: true
-  multiple_shopping_lists: true
-  stock_best_before_date_tracking: true
-  stock_location_tracking: true
-  stock_price_tracking: true
-  stock_product_freezing: true
-  stock_product_opened_tracking: true
-  stock_count_opened_products_against_minimum_stock_amount: true
+culture: it          # Localizzazione interfaccia e date
+currency: EUR        # Valuta mostrata nei riepiloghi
+timezone: Europe/Rome
+log_level: debug     # Aumenta i log in caso di debug
+demo_data: false     # Avvia con dataset vuoto in produzione
 ```
 
----
+### Dati persistenti
+- Il file applicativo è `/data/grocy/state.json`
+- Puoi effettuarne backup o modificarlo manualmente (JSON valido)
+- Permessi impostati automaticamente a `600`
 
-## 🛡️ **PROTEZIONI IMPLEMENTATE**
+### API disponibili
+- `GET /api/state` – stato completo (stock, shopping list, tasks)
+- `POST /api/items` – aggiunge un prodotto
+- `PATCH /api/items/<id>` – aggiorna quantità/scadenza
+- `DELETE /api/items/<id>` – rimuove il prodotto
+- `POST /api/shopping-list` – aggiunge elemento alla spesa
+- `PATCH /api/shopping-list/<id>` – marca come acquistato
+- `POST /api/tasks` – aggiunge attività
+- `PATCH /api/tasks/<id>` – completa/aggiorna attività
+- `DELETE /api/tasks/<id>` – elimina attività
 
-### **🔐 Autenticazione**
-
-- Utente ingress sicuro configurato
-- Autenticazione obbligatoria per ingress
-- Controllo sessioni sicure
-
-### **🌐 Sicurezza Web**
-
-- **Content Security Policy (CSP)** - Previene XSS
-- **X-Frame-Options: DENY** - Previene clickjacking
-- **Strict-Transport-Security (HSTS)** - Forza HTTPS
-- **X-Content-Type-Options: nosniff** - Previene MIME sniffing
-- **Referrer-Policy** - Controllo informazioni referrer
-- **Permissions-Policy** - Controllo permessi browser
-
-### **⚡ Rate Limiting**
-
-- **Limite login**: 5 tentativi/minuto
-- **Limite API**: 10 richieste/secondo
-- **Rate limiting per ingress**
-- **Timeout di sicurezza** per prevenire attacchi slowloris
-
-### **🔒 Configurazione Sicura**
-
-- **Memory limit**: 384M → 128M
-- **Upload size**: 64M → 16M
-- **Client max body**: 4G → 64M
-- **Funzioni pericolose disabilitate**
-- **Configurazioni sessione sicure**
-- **User non-root per nginx**
+Tutte le richieste devono includere `Content-Type: application/json`.
 
 ---
 
-## ✅ **VERIFICA INSTALLAZIONE**
+## 🛡️ Protezioni implementate
 
-### **Checklist Post-Installazione**
-
-- [ ] Repository aggiunto correttamente
-- [ ] Add-on installato senza errori
-- [ ] Configurazione sicura applicata
-- [ ] Credenziali predefinite cambiate
-- [ ] SSL funzionante
-- [ ] Accesso tramite ingress
-- [ ] Tutte le funzionalità testate
-
-### **Test di Sicurezza**
-
-1. **Test Accesso Non Autorizzato**:
-
-   - Prova ad accedere senza autenticazione
-   - Dovrebbe essere bloccato
-
-2. **Test Headers di Sicurezza**:
-
-   - Controlla headers nelle DevTools del browser
-   - Dovrebbero essere presenti CSP, HSTS, etc.
-
-3. **Test Rate Limiting**:
-   - Prova multiple richieste rapide
-   - Dovrebbe attivare il rate limiting
+- Content Security Policy restrittiva
+- Strict-Transport-Security (HSTS)
+- X-Frame-Options, Referrer-Policy, Permissions-Policy
+- Limite dimensione body 1MB e validazione JSON
+- Queue interna per scritture concorrenti sul file dati
+- Health check `GET /api/health`
 
 ---
 
-## 🆘 **TROUBLESHOOTING**
+## ✅ Checklist post installazione
 
-### **Problema: Repository non trovato**
+- [ ] Repository aggiunto
+- [ ] Add-on installato e avviato senza errori
+- [ ] Configurazione salvata e riavvio effettuato
+- [ ] Interfaccia accessibile tramite Ingress
+- [ ] Dataset iniziale verificato (demo o vuoto)
+- [ ] API testate (facoltativo)
 
-**Soluzione**:
-
-- Verifica URL: `https://github.com/llingua/addon-grocy`
-- Riavvia Home Assistant
-- Controlla connessione internet
-
-### **Problema: Add-on non visibile**
-
-**Soluzione**:
-
-- Riavvia Home Assistant
-- Pulisci cache browser
-- Controlla log supervisor
-
-### **Problema: Errore di configurazione**
-
-**Soluzione**:
-
-- Verifica sintassi YAML
-- Controlla log dell'add-on
-- Riavvia l'add-on
-
-### **Problema: Accesso negato**
-
-**Soluzione**:
-
-- Verifica credenziali
-- Controlla configurazione ingress
-- Testa accesso tramite Home Assistant
-
----
-
-## 📊 **MONITORAGGIO SICUREZZA**
-
-### **Log da Monitorare**
-
-```bash
-# Log nginx
-tail -f /var/log/nginx/access.log
-tail -f /var/log/nginx/error.log
-
-# Log PHP
-tail -f /var/log/php82-fpm.log
-
-# Log add-on
-hassio addon logs grocy
-```
-
-### **Metriche di Sicurezza**
-
-- Tentativi di login falliti
-- Rate limiting attivato
-- Accessi non autorizzati
-- Errori di configurazione
-
----
-
-## 🔄 **MANUTENZIONE**
-
-### **Aggiornamenti**
-
-- Monitora aggiornamenti di sicurezza
-- Backup configurazioni prima di aggiornare
-- Testa in ambiente di sviluppo
-
-### **Backup**
-
-- Backup regolare del database Grocy
-- Backup configurazioni add-on
-- Backup certificati SSL
-
----
-
-## 📞 **SUPPORTO**
-
-### **In Caso di Problemi**
-
-1. Controlla i log di Home Assistant
-2. Verifica la configurazione
-3. Consulta la documentazione
-4. Contatta il supporto della community
-
-### **Risorse Utili**
-
-- [Home Assistant Community](https://community.home-assistant.io/)
-- [Grocy Documentation](https://grocy.info/)
-- [Security Best Practices](https://owasp.org/)
-
----
-
-## 🎉 **CONGRATULAZIONI!**
-
-Hai installato con successo l'add-on Grocy sicuro! 🛡️
-
-**Il tuo sistema è ora protetto con:**
-
-- Score sicurezza: 8.8/10
-- Vulnerabilità critiche: 0/4
-- Protezioni attive: 15+
-
-**Goditi la gestione sicura della tua casa!** 🏠🔒
-
----
-
-_Istruzioni generate automaticamente - Data: 2025_  
-_Add-on Grocy Sicuro v1.0_  
-_Score Sicurezza: 8.8/10_
+Per log dettagliati utilizzare il pannello **Log** dell'add-on (log Node.js).
