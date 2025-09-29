@@ -1,0 +1,63 @@
+{
+  "items": [
+    {
+      "id": "item-italian-espresso",
+      "name": "Caffè espresso",
+      "quantity": 2,
+      "location": "Dispensa",
+      "bestBefore": "2025-05-01",
+      "price": 4.5,
+      "createdAt": "2025-01-10T08:30:00.000Z"
+    },
+    {
+      "id": "item-extra-virgin-olive-oil",
+      "name": "Olio EVO",
+      "quantity": 1,
+      "location": "Cucina",
+      "bestBefore": "2026-02-15",
+      "price": 8.9,
+      "createdAt": "2025-01-12T10:15:00.000Z"
+    },
+    {
+      "id": "item-basilico-surgelato",
+      "name": "Basilico surgelato",
+      "quantity": 4,
+      "location": "Freezer",
+      "bestBefore": "2025-09-20",
+      "price": 2.1,
+      "createdAt": "2025-01-18T14:45:00.000Z"
+    }
+  ],
+  "shoppingList": [
+    {
+      "id": "shop-pasta-integrale",
+      "name": "Pasta integrale",
+      "quantity": 3,
+      "completed": false,
+      "createdAt": "2025-01-22T09:00:00.000Z"
+    },
+    {
+      "id": "shop-detergente-casa",
+      "name": "Detergente multiuso",
+      "quantity": 1,
+      "completed": false,
+      "createdAt": "2025-01-22T09:05:00.000Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-frigorifero",
+      "name": "Pulire il frigorifero",
+      "dueDate": "2025-02-15",
+      "completed": false,
+      "createdAt": "2025-01-19T11:20:00.000Z"
+    },
+    {
+      "id": "task-olio",
+      "name": "Controllo scorte olio",
+      "dueDate": "2025-02-05",
+      "completed": false,
+      "createdAt": "2025-01-20T17:10:00.000Z"
+    }
+  ]
+}

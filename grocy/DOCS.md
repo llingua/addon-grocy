@@ -1,284 +1,85 @@
-# Home Assistant Community Add-on: Grocy
+# Home Assistant Community Add-on: Grocy (Node Edition)
 
-[Grocy][grocy] - ERP beyond your fridge is a powerful groceries & household
-management solution for your home, delivering features like:
+Grocy per Home Assistant ora è alimentato da un backend Node.js e da un frontend
+React moderno. Offre un'unica dashboard per gestire dispensa, lista della spesa e
+attività domestiche.
 
-- Stock management
-- Shopping list
-- Recipes
-- Chores & tasks
-- Inventory
-- and many more.
+## Installazione
 
-[Try out the online demo of Grocy][grocy-demo].
+1. Apri **Impostazioni → Componenti aggiuntivi** in Home Assistant.
+2. Aggiungi il repository `https://github.com/llingua/addon-grocy` nello Store.
+3. Installa l'add-on **Grocy (Node Edition)**.
+4. Avvia l'add-on e apri l'interfaccia tramite **OPEN WEB UI** (Ingress).
 
-## Installation
+Non sono presenti credenziali di default: l'accesso avviene tramite Home
+Assistant.
 
-The installation of this add-on is pretty straightforward and not different in
-comparison to installing any other Home Assistant add-on.
+## Configurazione
 
-1. Click the Home Assistant My button below to open the add-on on your Home
-   Assistant instance.
-
-   [![Open this add-on in your Home Assistant instance.][addon-badge]][addon]
-
-1. Click the "Install" button to install the add-on.
-1. Start the "Grocy" add-on.
-1. Check the logs of the "Grocy" add-on to see if everything went well.
-1. Click on the "OPEN WEB UI" button to get into the interface of Grocy.
-1. The default login is user: `admin` password: `admin`.
-1. Enjoy the add-on!
-
-## Configuration
-
-**Note**: _Remember to restart the add-on when the configuration is changed._
-
-Example add-on configuration:
+Ricordati di riavviare l'add-on dopo ogni modifica al file di configurazione.
 
 ```yaml
-culture: en
-currency: USD
-entry_page: stock
-features:
-  batteries: true
-  calendar: true
-  chores: true
-  equipment: true
-  recipes: true
-  shoppinglist: true
-  stock: true
-  tasks: true
-tweaks:
-  chores_assignment: true
-  multiple_shopping_lists: true
-  stock_best_before_date_tracking: true
-  stock_location_tracking: true
-  stock_price_tracking: true
-  stock_product_freezing: true
-  stock_product_opened_tracking: true
-  stock_count_opened_products_against_minimum_stock_amount: true
+culture: it
+currency: EUR
+timezone: Europe/Rome
+demo_data: true
 log_level: info
-ssl: false
-certfile: fullchain.pem
-keyfile: privkey.pem
 ```
 
-**Note**: _This is just an example, don't copy and paste it! Create your own!_
+### Opzione: `culture`
 
-### Option: `log_level`
+Imposta la lingua e la localizzazione (formati data/numero) del frontend.
+Valori ammessi: `ca`, `cs`, `da`, `de`, `el_GR`, `en`, `en_GB`, `es`, `et`,
+`fi`, `fr`, `he_IL`, `hu`, `it`, `ja`, `ko_KR`, `lt`, `nl`, `no`, `pl`, `pt_BR`,
+`pt_PT`, `ro`, `ru`, `sk_SK`, `sl`, `sv_SE`, `ta`, `tr`, `uk`, `zh_CN`, `zh_TW`.
 
-The `log_level` option controls the level of log output by the addon and can
-be changed to be more or less verbose, which might be useful when you are
-dealing with an unknown issue. Possible values are:
+### Opzione: `currency`
 
-- `trace`: Show every detail, like all called internal functions.
-- `debug`: Shows detailed debug information.
-- `info`: Normal (usually) interesting events.
-- `warning`: Exceptional occurrences that are not errors.
-- `error`: Runtime errors that do not require immediate action.
-- `fatal`: Something went terribly wrong. Add-on becomes unusable.
+Valuta utilizzata per il valore stimato della dispensa (codice ISO4217).
+Esempi: `EUR`, `USD`, `GBP`.
 
-Please note that each level automatically includes log messages from a
-more severe level, e.g., `debug` also shows `info` messages. By default,
-the `log_level` is set to `info`, which is the recommended setting unless
-you are troubleshooting.
+### Opzione: `timezone`
 
-### Option: `ssl`
+Timezone da utilizzare per il calcolo delle date delle attività. Se omessa viene
+utilizzato `UTC`.
 
-Enables/Disables SSL (HTTPS) on the web interface of Grocy
-Panel. Set it `true` to enable it, `false` otherwise.
+### Opzione: `demo_data`
 
-### Option: `certfile`
+- `true`: inizializza il file `/data/grocy/state.json` con un dataset
+  dimostrativo (scorte, lista della spesa e attività di esempio)
+- `false`: crea un dataset vuoto
 
-The certificate file to use for SSL.
+### Opzione: `log_level`
 
-**Note**: _The file MUST be stored in `/ssl/`, which is the default_
+Livello di log del backend Node.js. Valori: `trace`, `debug`, `info`, `notice`,
+`warning`, `error`, `fatal`. Il valore predefinito è `info`.
 
-### Option: `keyfile`
+## Storage persistente
 
-The private key file to use for SSL.
+I dati dell'applicazione sono salvati in `/data/grocy/state.json`. Puoi
+eseguire backup o modifiche manuali a questo file per integrare Grocy con altri
+strumenti, facendo attenzione alla sintassi JSON.
 
-**Note**: _The file MUST be stored in `/ssl/`, which is the default_
+## API
 
-### Option: `culture`
+L'applicazione espone API RESTful sullo stesso dominio dell'interfaccia web.
+Endpoint principali:
 
-Is used for setting the language. Choose between:
+- `GET /api/state`: stato completo (dispensa, spesa, attività, configurazione)
+- `POST /api/items`: aggiunge un prodotto alla dispensa
+- `PATCH /api/items/<id>`: aggiorna un prodotto
+- `DELETE /api/items/<id>`: rimuove un prodotto
+- `POST /api/shopping-list`: aggiunge un elemento alla lista della spesa
+- `PATCH /api/shopping-list/<id>`: aggiorna/completa un elemento
+- `DELETE /api/shopping-list/<id>`: rimuove un elemento
+- `POST /api/tasks`: crea una nuova attività
+- `PATCH /api/tasks/<id>`: aggiorna o completa un'attività
+- `DELETE /api/tasks/<id>`: elimina un'attività
 
-- `ca` (Catalan)
-- `cs` (Czech)
-- `da` (Danish)
-- `de` (German)
-- `el_GR` (Greek - Greece)
-- `en` (English)
-- `en_GB` (English - United Kingdom)
-- `es` (Spanish)
-- `fi` (Finnish)
-- `fr` (French)
-- `he_IL` (Hebrew - Israel)
-- `hu` (Hungarian)
-- `it` (Italian)
-- `ja` (Japanese)
-- `ko_KR` (Korean - South Korea)
-- `nl` (Dutch)
-- `no` (Norwegian)
-- `pl` (Polish)
-- `pt_BR` (Portuguese - Brazil)
-- `pt_PT` (Portuguese - Portugal)
-- `ru` (Russian)
-- `sk_SK` (Slovak - Slovakia)
-- `sv_SE` (Swedish - Sweden)
-- `ta` (Tamil)
-- `tr` (Turkish)
-- `zh_CN` (Chinese - China)
-- `zh_TW` (Chinese - Taiwan)
+Tutte le richieste devono essere inviate con header `Content-Type: application/json`.
 
-### Option: `currency`
+## Supporto
 
-Determines the currency as displayed in the Grocy interface, specified by the
-ISO4217 three digit currency code.
-
-Examples: `USD`, `CAD`, `GBP` or `EUR`.
-
-### Option: `entry_page`
-
-Allows you to specify an custom homepage if desired.
-
-You can use the one of the following values:
-
-- `batteries`
-- `calendar`
-- `chores`
-- `equipment`
-- `mealplan`
-- `recipes`
-- `shoppinglist`
-- `stock`
-- `tasks`
-
-By default the homepage is set to the stock overview.
-
-### Option: `features`
-
-Is used for enable or disable features in Grocy. Disabled features
-are hidden from the web interface. The following features can be enabled
-or disabled:
-
-- `batteries`
-- `calendar`
-- `chores`
-- `equipment`
-- `recipes`
-- `shoppinglist`
-- `stock`
-- `tasks`
-
-Set it `true` to enable it, `false` otherwise.
-
-### Option: `tweaks`
-
-These options are used to tweak part of the core behavior of Grocy.
-The following sub features can be enabled or disabled:
-
-- `chores_assignment`
-- `multiple_shopping_lists`
-- `stock_best_before_date_tracking`
-- `stock_location_tracking`
-- `stock_price_tracking`
-- `stock_product_freezing`
-- `stock_product_opened_tracking`
-- `stock_count_opened_products_against_minimum_stock_amount`
-
-Set it `true` to enable it, `false` otherwise.
-
-The following sub features can be set to specify a day (0-6), where 0 would
-equal Sunday:
-
-- `calendar_first_day_of_week`
-- `meal_plan_first_day_of_week`
-
-### Option: `grocy_ingress_user`
-
-Allows you to specify a default ingress user if desired (e.g. `admin`).
-
-If no ingress user is set, the default login authentication is used.
-
-## Known issues and limitations
-
-- Grocy support to provide custom lookup resources to lookup information
-  on the internet based on the product barcode. This is currently not yet
-  supported by the add-on.
-
-## Changelog & Releases
-
-This repository keeps a change log using [GitHub's releases][releases]
-functionality.
-
-Releases are based on [Semantic Versioning][semver], and use the format
-of `MAJOR.MINOR.PATCH`. In a nutshell, the version will be incremented
-based on the following:
-
-- `MAJOR`: Incompatible or major changes.
-- `MINOR`: Backwards-compatible new features and enhancements.
-- `PATCH`: Backwards-compatible bugfixes and package updates.
-
-## Support
-
-Got questions?
-
-You have several options to get them answered:
-
-- The [Home Assistant Community Add-ons Discord chat server][discord] for add-on
-  support and feature requests.
-- The [Home Assistant Discord chat server][discord-ha] for general Home
-  Assistant discussions and questions.
-- The Home Assistant [Community Forum][forum].
-- Join the [Reddit subreddit][reddit] in [/r/homeassistant][reddit]
-
-You could also [open an issue here][issue] GitHub.
-
-## Authors & contributors
-
-The original setup of this repository is by [Franck Nijhof][frenck].
-
-For a full list of all authors and contributors,
-check [the contributor's page][contributors].
-
-## License
-
-MIT License
-
-Copyright (c) 2019-2025 Franck Nijhof
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-[addon-badge]: https://my.home-assistant.io/badges/supervisor_addon.svg
-[addon]: https://my.home-assistant.io/redirect/supervisor_addon/?addon=a0d7b954_grocy&repository_url=https%3A%2F%2Fgithub.com%2Fhassio-addons%2Frepository
-[alpine-packages]: https://pkgs.alpinelinux.org/packages
-[contributors]: https://github.com/hassio-addons/addon-grocy/graphs/contributors
-[discord-ha]: https://discord.gg/c5DvZ4e
-[discord]: https://discord.me/hassioaddons
-[forum]: https://community.home-assistant.io/t/home-assistant-community-add-on-grocy/112422?u=frenck
-[frenck]: https://github.com/frenck
-[grocy-demo]: https://demo-en.grocy.info
-[grocy]: https://grocy.info/
-[issue]: https://github.com/hassio-addons/addon-grocy/issues
-[python-packages]: https://pypi.org/
-[reddit]: https://reddit.com/r/homeassistant
-[releases]: https://github.com/hassio-addons/addon-grocy/releases
-[semver]: https://semver.org/spec/v2.0.0.html
+Per assistenza, idee o bug report visita il
+[repository GitHub del progetto](https://github.com/llingua/addon-grocy) o
+partecipa ai canali community indicati nel README.

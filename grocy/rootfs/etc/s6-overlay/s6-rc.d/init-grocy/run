@@ -1,26 +1,36 @@
 #!/command/with-contenv bashio
 # shellcheck shell=bash
 # ==============================================================================
-# Home Assistant Community Add-on: Grocy
-# Sets up Grocy before the server starts
+# Home Assistant Community Add-on: Grocy (Node Edition)
+# Prepares persistent storage for the refactored Node.js application
 # ==============================================================================
-if ! bashio::fs.directory_exists "/data/grocy"; then
-    bashio::log.debug 'Data directory not initialized, doing that now...'
+set -euo pipefail
 
-    # Setup structure
-    cp -R /var/www/grocy/data /data/grocy
+DATA_DIR="/data/grocy"
+STATE_FILE="${DATA_DIR}/state.json"
+DEFAULT_STATE="/opt/grocy/data/default-state.json"
+EMPTY_STATE="/opt/grocy/data/empty-state.json"
+
+bashio::log.info 'Preparing persistent storage for Grocy Node Edition'
+
+if ! bashio::fs.directory_exists "${DATA_DIR}"; then
+    bashio::log.notice 'Creating data directory'
+    mkdir -p "${DATA_DIR}"
 fi
 
-if ! bashio::fs.directory_exists "/data/grocy/viewcache"; then
-    mkdir -p /data/grocy/viewcache
-    chown nginx:nginx /data/grocy/viewcache
+if ! bashio::fs.file_exists "${STATE_FILE}"; then
+    if bashio::config.false 'demo_data'; then
+        bashio::log.notice 'Initializing with an empty dataset'
+        cp "${EMPTY_STATE}" "${STATE_FILE}"
+    else
+        bashio::log.notice 'Seeding demo dataset'
+        cp "${DEFAULT_STATE}" "${STATE_FILE}"
+    fi
 fi
 
-bashio::log.debug 'Symlinking data directory to persistent storage location...'
-rm -f -r /var/www/grocy/data
-ln -s /data/grocy /var/www/grocy/data
+if bashio::fs.file_exists "${STATE_FILE}"; then
+    chmod 600 "${STATE_FILE}"
+fi
 
-# Patch current relative URL handling braindamage
-bashio::log.info "Patching Grocy to fix relative URL handling..."
-cd /var/www/grocy || bashio.exit.nok 'Failed cd'
-patch -p1 < /patches/fix_braindamage.patch || true
+touch "${DATA_DIR}/.keep"
+chmod 600 "${DATA_DIR}/.keep"
